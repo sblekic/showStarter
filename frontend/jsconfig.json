@@ -1,0 +1,12 @@
+// https://code.visualstudio.com/docs/languages/jsconfig
+// https://youtrack.jetbrains.com/issue/WEB-55332/Vite-aliases-in-viteconfig-support
+// ovo sam dodao jer mi @ alias za ./src u vite.config nije radio kako treba
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}

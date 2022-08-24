@@ -19,9 +19,14 @@ export const useWalletStore = defineStore(
       txError: undefined,
     });
 
+    // ova funkcija stoji ovdje u slučaju da želim nešto isprobati
     async function testFn() {
       console.log("fn call testFn");
     }
+
+    // computed property koja ovisi o stanju chainId property-a objekta state
+    // ako korisnik je ulogiran i nije spojen na network aplikacije, na frontu se
+    // prikazuje warning
     const isWrongNetwork = computed(() => {
       if (state.chainId !== APP_CHAIN_ID) {
         //kad bude trebalo, napisati network koji će app koristiti
@@ -41,10 +46,8 @@ export const useWalletStore = defineStore(
     }
 
     window.ethereum.on("chainChanged", (chainId) => {
-      // Handle the new chain.
-      // Correctly handling chain changes can be complicated.
-      // We recommend reloading the page unless you have good reason not to.
       state.chainId = chainId;
+      // po metamask dokumentaciji preporučeno je ponovno učitavati stranicu.
       window.location.reload();
     });
 

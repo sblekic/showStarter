@@ -9,8 +9,8 @@ const { connectWallet, disconnect } = useWalletStore();
 <template>
   <div class="flex flex-col items-center justify-center">
     <p class="text-xl mb-2" v-if="isWrongNetwork && state.isConnected">
-      {{ state.networkError }}
       <!-- (na vrhu ekrana kao warning) -->
+      {{ state.networkError }}
     </p>
     <button
       class="bg-green-900 inline-flex items-center rounded h-10 p-5 transition hover:scale-110 mb-4"

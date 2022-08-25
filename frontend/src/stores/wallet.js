@@ -1,6 +1,7 @@
 import { reactive, computed } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
 import detectEthereumProvider from "@metamask/detect-provider";
+import { ethers } from "ethers";
 
 export const useWalletStore = defineStore(
   "wallet",
@@ -29,37 +30,49 @@ export const useWalletStore = defineStore(
     // prikazuje warning
     const isWrongNetwork = computed(() => {
       if (state.chainId !== APP_CHAIN_ID) {
-        //kad bude trebalo, napisati network koji će app koristiti
+        // kad bude trebalo, napisati network koji će app koristiti
         state.networkError = "Please connect Metamask to Localhost:8545";
         return true;
       } else {
+        // reset error state
         state.networkError = undefined;
         return false;
       }
     });
 
+    // s obzirom da isključivo user može odjaviti stranicu iz MM plugina,
+    // odjava je simulirana na način da se resetira stanje aplikacije.
     function disconnect() {
       state.isConnected = false;
       state.currAccount = "";
       state.txError = undefined;
-      localStorage.removeItem("wallet");
+      // localStorage.removeItem("wallet");
     }
 
-    window.ethereum.on("chainChanged", (chainId) => {
-      state.chainId = chainId;
+    window.ethereum.on("accountsChanged", (accounts) => {
+      // u else pokrivam slučaj kada user manualno makne app iz connected apps u metamask
+      console.log("accountsChanged()");
+      if (accounts.length > 0) {
+        state.currAccount = accounts[0];
+      } else disconnect();
+    });
+
+    window.ethereum.on("chainChanged", (id) => {
+      console.log("call: chainchanged()");
+      state.chainId = id;
       // po metamask dokumentaciji preporučeno je ponovno učitavati stranicu.
       window.location.reload();
     });
 
     async function changeNetwork() {
       try {
+        console.log("call: changeNetwork()");
         await window.ethereum.request({
           method: "wallet_switchEthereumChain",
           params: [{ chainId: `${APP_CHAIN_ID}` }],
         });
         state.chainId = APP_CHAIN_ID;
         window.location.reload();
-        console.log("usao u switch network");
       } catch (switchError) {
         // This error code indicates that the chain has not been added to MetaMask.
         if (switchError.code === 4902) {
@@ -81,11 +94,14 @@ export const useWalletStore = defineStore(
           }
         }
         // handle other "switch" errors
+        console.error("Greška: wallet_switchEthereumChain", switchError);
       }
     }
 
     async function connectWallet() {
       console.log("fn call connectWallet");
+
+      // detectEthereumProvider mi pokrije slučaj kada je window.ethereum objekt injected asinkrono; mobile možda?
       const metamask = await detectEthereumProvider({ mustBeMetaMask: true });
       if (metamask) {
         try {
@@ -117,7 +133,14 @@ export const useWalletStore = defineStore(
       }
     }
 
-    return { state, testFn, connectWallet, disconnect, isWrongNetwork };
+    return {
+      state,
+      testFn,
+      connectWallet,
+      changeNetwork,
+      disconnect,
+      isWrongNetwork,
+    };
   },
   {
     //piniaPluginPersistedstate - option to enable persisted storage with default settings

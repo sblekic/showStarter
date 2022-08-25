@@ -3,15 +3,22 @@ import { storeToRefs } from "pinia";
 import { useWalletStore } from "@/stores/wallet";
 const wallet = useWalletStore();
 const { state, isWrongNetwork } = storeToRefs(wallet);
-const { connectWallet, disconnect } = useWalletStore();
+const { connectWallet, changeNetwork, disconnect } = useWalletStore();
 </script>
 
 <template>
   <div class="flex flex-col items-center justify-center">
-    <p class="text-xl mb-2" v-if="isWrongNetwork && state.isConnected">
-      <!-- (na vrhu ekrana kao warning) -->
-      {{ state.networkError }}
-    </p>
+    <!-- stavio sam u button i anchor zbog vizualnih efekata, vj se sve to može postaviti sa tailwind -->
+    <button>
+      <a
+        class="text-xl mb-2"
+        v-if="isWrongNetwork && state.isConnected"
+        @click="changeNetwork"
+      >
+        <!-- (na vrhu ekrana kao warning) -->
+        {{ state.networkError }}
+      </a>
+    </button>
     <button
       class="bg-green-900 inline-flex items-center rounded h-10 p-5 transition hover:scale-110 mb-4"
       v-on:click="connectWallet"

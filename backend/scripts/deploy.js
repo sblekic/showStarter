@@ -5,18 +5,15 @@
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
 
-//u toolboxu se dodoje ethers objekt na hre
-require("@nomicfoundation/hardhat-toolbox");
-
-const hre = require("hardhat");
-const { ethers } = hre;
+const { ethers } = require("hardhat");
 
 async function main() {
   const [owner, randomPerson] = await ethers.getSigners();
-  const helloWorldFactory = await ethers.getContractFactory("HelloWorld");
-  const helloWorldContract = await helloWorldFactory.deploy(
-    "Poruka za construktor"
-  );
+  const helloWorldFactory = await ethers.getContractFactory("ShowStarter");
+  const helloWorldContract = await helloWorldFactory
+    .deploy
+    // "Poruka za construktor"
+    ();
   await helloWorldContract.deployed();
 
   console.log("Contract deployed to:", helloWorldContract.address);

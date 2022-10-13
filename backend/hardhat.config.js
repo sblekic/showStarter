@@ -9,12 +9,9 @@ and take advantage of your editor's autocomplete.
 */
 const { task } = require("hardhat/config");
 
-// radilo bi i bez ovoga jer se injecta hre u runtime ali eksplicitno deklariram jer mi smeta error od lintera
-const { ethers } = require("hardhat");
-
 // htio sam kreirati task da vidim kako funkcionira
 task("accounts", "List of local test accounts", async () => {
-  const accounts = await ethers.getSigners();
+  const accounts = await hre.ethers.getSigners();
   // console.log(accounts[0]);
   for (const account of accounts) {
     console.log(account.address);

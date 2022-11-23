@@ -14,7 +14,7 @@ async function main() {
   const eventFactoryContract = await eventFactory.deploy(
     implementationContract.address
   );
-  await implementationContract.deployed();
+  await eventFactoryContract.deployed();
 }
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.

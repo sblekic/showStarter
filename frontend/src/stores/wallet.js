@@ -1,7 +1,6 @@
 import { reactive, computed } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
 import detectEthereumProvider from "@metamask/detect-provider";
-import { ethers } from "ethers";
 
 export const useWalletStore = defineStore(
   "wallet",
@@ -144,8 +143,8 @@ export const useWalletStore = defineStore(
   },
   {
     //piniaPluginPersistedstate - option to enable persisted storage with default settings
-    //default settings available at the plugins page. At the moment i'm using the localStorage to
-    //persist the login state on refresh
+    //default settings available at the plugins page.
+    //persists the login state on refresh
     persist: true,
   }
 );

@@ -22,7 +22,7 @@ task("accounts", "List of local test accounts", async () => {
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.17",
-  defaultNetwork: "mumbai",
+  defaultNetwork: "hardhat",
   networks: {
     hardhat: {},
     mumbai: {

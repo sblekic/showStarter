@@ -5,11 +5,13 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
+import "./IEventImplementation.sol";
 
 contract EventImplementation is
     Initializable,
     OwnableUpgradeable,
-    ERC721URIStorageUpgradeable
+    ERC721URIStorageUpgradeable,
+    IEventImplementation
 {
     function initialize(string memory _eventName, string memory _eventSymbol)
         external
@@ -25,8 +27,10 @@ contract EventImplementation is
         );
     }
 
-    //simple function to print out version
-    function getEventName() public pure virtual returns (string memory) {
-        return "EventImplementation_v1!";
+    EventData public eventData;
+
+    function setEventData(EventData calldata _eventData) external {
+        // ocito mogu samo assign struct na struct jer su istog tipa?
+        eventData = _eventData;
     }
 }

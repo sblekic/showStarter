@@ -1,3 +1,4 @@
+//@ skracenica mi nije radila pa umjesto from url treba staviti node:url (ne sjecam se zasto)
 import { fileURLToPath, URL } from "node:url";
 
 import { defineConfig } from "vite";

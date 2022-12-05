@@ -20,22 +20,25 @@ async function main() {
   );
   await eventFactoryContract.deployed();
 
-  // await eventFactoryContract.createEvent("prodigy", "p", {
-  //   price: 3,
-  //   name: "exit fest",
-  // });
-  await eventFactoryContract.createEvent("prodigy", "p", [2, "exit"]);
+  await eventFactoryContract.createEvent({
+    price: 3,
+    name: "exit fest",
+  });
+
+  // await eventFactoryContract.createEvent("prodigy", "p", [2, "exit"]);
   // await eventFactoryContract.createEvent("colonia", "c");
 
-  const eventAddr = await eventFactoryContract.getEventAddress(0);
-  console.log(eventAddr);
+  // const eventAddr = await eventFactoryContract.getEventAddress(0);
+  // console.log(eventAddr);
+
   // eventAddr mi je adresa proxy ugovora; dignem instancu proxy ugovora koristeći impl ugovor koji mi je dostupan;
   // trebao bi postojati neki video gdje tip radi slicnu stvar na remix ide
-  const event = await ethers.getContractAt("EventImplementation", eventAddr);
-  const response = await event.name();
-  console.log(response);
 
-  console.log(await event.eventData());
+  // const event = await ethers.getContractAt("EventImplementation", eventAddr);
+  // const response = await event.name();
+  // console.log(response);
+
+  // console.log(await event.eventData());
 }
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.

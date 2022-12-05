@@ -1,5 +1,14 @@
+<script setup>
+import CreateEventForm from "@/components/CreateEventForm.vue";
+</script>
 <template>
-  <div>
-    <h1>This is an about page</h1>
-  </div>
+  <main>
+    <CreateEventForm />
+  </main>
 </template>
+
+<style scoped>
+main {
+  margin: 5vh;
+}
+</style>

@@ -15,6 +15,7 @@ async function main() {
     implementationContract.address
   );
   await eventFactoryContract.deployed();
+  console.log("eventFactory deployed to:", eventFactoryContract.address);
 }
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.

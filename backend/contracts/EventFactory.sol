@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 import "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "./IEventImplementation.sol";
 
 /*
@@ -17,8 +18,14 @@ contract EventFactory {
 
     UpgradeableBeacon immutable beacon;
 
-    // nekako cu morati pratiti kreirane erc721Evente
-    mapping(uint256 => address) events;
+    struct RegisteredEvent {
+        address proxyAddress;
+        string Eventname;
+        // eventDate
+        // eventLocation
+    }
+
+    mapping(uint256 => RegisteredEvent) events;
 
     constructor(address _eventLogic) {
         //beacon = new ShipBeacon(_initBlueprint);
@@ -32,15 +39,20 @@ contract EventFactory {
     //postaviti kao owner eventa u eventImplementation ugovor putem transferOwnership
     //ovo mi je bitno tako da mogu dohvatiti svi eventi registrirani sa strane organizatora (nekakav dash)
     //tehnički ovaj ugovor kreira proxy i po ownableUpgradeable docs on postaje po defaultu owner (testirano i tocno)
-    function createEvent(
-        string calldata _eventName,
-        string calldata _eventSymbol,
-        IEventImplementation.EventData memory _eventData
-    ) external returns (address) {
+    function createEvent(IEventImplementation.EventData memory _eventData)
+        external
+        returns (address)
+    {
+        eventId.increment();
+        string memory tokenName = string.concat(
+            "Showstarter Event ",
+            Strings.toString(eventId.current())
+        );
+        // !!! testiraj ako parametri funkcioniraju
         bytes memory eventCalldata = abi.encodeWithSignature(
             "initialize(string,string)",
-            _eventName,
-            _eventSymbol
+            tokenName,
+            "SHOW"
         );
         // deploy novog ugovora za event
         BeaconProxy eventProxy = new BeaconProxy(
@@ -49,8 +61,11 @@ contract EventFactory {
         );
 
         IEventImplementation(address(eventProxy)).setEventData(_eventData);
-        events[eventId.current()] = address(eventProxy);
-        eventId.increment();
+        //adaptirati za struct RegisteredEvent koji sam napisao
+        events[eventId.current()] = RegisteredEvent(
+            address(eventProxy),
+            _eventData.name
+        );
         // da li uopce mora ista vracati? ili ako treba da emitam event?
         return address(eventProxy);
     }
@@ -59,7 +74,11 @@ contract EventFactory {
         return address(beacon);
     }
 
-    function getEventAddress(uint32 _eventId) external view returns (address) {
+    function getEventById(uint32 _eventId)
+        external
+        view
+        returns (RegisteredEvent memory)
+    {
         //vrati adresu shipa
         return events[_eventId];
     }

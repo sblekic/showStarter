@@ -20,12 +20,14 @@ contract EventFactory {
 
     struct RegisteredEvent {
         address proxyAddress;
-        string Eventname;
+        string eventName;
         // eventDate
         // eventLocation
+        // bool isActive
+        // eventImage
     }
 
-    mapping(uint256 => RegisteredEvent) events;
+    mapping(uint256 => RegisteredEvent) idToEvents;
 
     constructor(address _eventLogic) {
         //beacon = new ShipBeacon(_initBlueprint);
@@ -48,7 +50,7 @@ contract EventFactory {
             "Showstarter Event ",
             Strings.toString(eventId.current())
         );
-        // !!! testiraj ako parametri funkcioniraju
+
         bytes memory eventCalldata = abi.encodeWithSignature(
             "initialize(string,string)",
             tokenName,
@@ -61,8 +63,9 @@ contract EventFactory {
         );
 
         IEventImplementation(address(eventProxy)).setEventData(_eventData);
-        //adaptirati za struct RegisteredEvent koji sam napisao
-        events[eventId.current()] = RegisteredEvent(
+
+        //adaptirati za struct RegisteredEvent koji sam napisao; trebati će nadogradnja
+        idToEvents[eventId.current()] = RegisteredEvent(
             address(eventProxy),
             _eventData.name
         );
@@ -79,7 +82,27 @@ contract EventFactory {
         view
         returns (RegisteredEvent memory)
     {
-        //vrati adresu shipa
-        return events[_eventId];
+        //vraca array koji sadrži podatke registeredEvent strukture
+        return idToEvents[_eventId];
+    }
+
+    function getRegisteredEvents()
+        external
+        view
+        returns (RegisteredEvent[] memory)
+    {
+        uint eventCount = eventId.current();
+        RegisteredEvent[] memory eventList = new RegisteredEvent[](eventCount);
+        uint currentIndex = 0;
+        uint currentId;
+        // trebati će filtrirati po aktivnim eventima
+        for (uint i = 0; i < eventCount; i++) {
+            currentId = i + 1;
+            RegisteredEvent storage currentItem = idToEvents[currentId];
+            eventList[currentIndex] = currentItem;
+            currentIndex += 1;
+        }
+        //polje sa svim eventima
+        return eventList;
     }
 }

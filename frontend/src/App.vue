@@ -6,8 +6,9 @@ import { RouterLink, RouterView } from "vue-router";
   <header>
     <div>
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/">Login info</RouterLink>
+        <RouterLink to="/about">Create Event</RouterLink>
+        <RouterLink to="/eventi">Eventi</RouterLink>
       </nav>
     </div>
   </header>
@@ -24,7 +25,7 @@ nav {
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+  color: chartreuse;
 }
 
 nav a.router-link-exact-active:hover {

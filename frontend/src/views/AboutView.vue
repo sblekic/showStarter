@@ -1,6 +1,7 @@
 <script setup>
 import CreateEventForm from "@/components/CreateEventForm.vue";
 </script>
+
 <template>
   <main>
     <CreateEventForm />

@@ -16,6 +16,7 @@ const eventFactory = new ethers.Contract(
   provider.getSigner(0)
 );
 
+// deklarirao sam ga samo da vidim ako radi proxy
 const eventProxy = new ethers.Contract(
   "0xbf9fBFf01664500A33080Da5d437028b07DFcC55",
   proxyArtifact.abi,
@@ -26,14 +27,11 @@ const imeEventa = ref("");
 const tokenSymbol = ref("");
 const cijena = ref();
 async function createEvent() {
-  console.log(imeEventa.value);
   //   const eventAddr = await eventFactory.createEvent([23, "woodstock"]);
   const regEvent = await eventFactory.getEventById(1);
   console.log(regEvent);
-
-  const tits = await eventProxy.name();
-  console.log(tits);
-  //   console.log(eventAdd);
+  const eventList = await eventFactory.getRegisteredEvents();
+  console.log(eventList);
 }
 </script>
 

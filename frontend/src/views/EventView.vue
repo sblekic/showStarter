@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, onBeforeMount } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { ethers } from "ethers";
 import contractArtifact from "D:/Documents/Zavrsni/vjezbanje/dapp_demo/backend/artifacts/contracts/EventFactory.sol/EventFactory.json";
 
@@ -13,9 +13,11 @@ const eventFactory = new ethers.Contract(
 
 // ako ne stavim u reactive onda mi se ne azurira dom
 // zbog asinkronosti fetch funkcije
-let eventList = reactive({
-  list: [],
-});
+// let eventList = reactive({
+//   list: [],
+// });
+
+let eventList = ref([]);
 
 async function getEvents() {
   let data = await eventFactory.getRegisteredEvents();
@@ -27,7 +29,7 @@ async function getEvents() {
       proxy: d.proxyAddress,
     };
     console.log("value in data ", temp);
-    eventList.list.push(temp);
+    eventList.value.push(temp);
   }
 }
 
@@ -35,46 +37,36 @@ onBeforeMount(() => {
   getEvents();
 });
 
-const stockImg = "https://via.placeholder.com/256";
+const stockImg = "https://placeholder.pics/svg/382x232/4FFF3B-3969FF";
 </script>
 
 <template>
-  <div class="bg-gray-100">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
-        <h2 class="text-2xl font-bold text-gray-900">Registered Events</h2>
+  <main>
+    <h2 class="text-2xl font-bold text-gray-900">Registered Events</h2>
 
-        <div
-          class="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0"
-        >
-          <div
-            v-for="event in eventList.list"
-            :key="event.proxy"
-            class="group relative"
-          >
-            <div
-              class="relative h-80 w-full overflow-hidden rounded-lg bg-white group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1"
-            >
-              <img
-                :src="stockImg"
-                alt="Stock image with size text"
-                class="h-full w-full object-cover object-center"
-              />
-            </div>
-            <p class="mt-6 text-base font-semibold text-gray-900">
+    <div class="grid grid-cols-4 gap-4 mt-4">
+      <div
+        v-for="event in eventList"
+        :key="event.proxy"
+        class="flex justify-center"
+      >
+        <div class="shadow-lg bg-white max-w-sm">
+          <a href="#">
+            <img src="https://placeholder.pics/svg/300" alt="" />
+          </a>
+          <div class="p-6">
+            <h5 class="text-gray-900 text-xl font-bold mb-2">
               {{ event.eventName }}
+            </h5>
+            <p class="text-gray-700 text-base mb-4">
+              <!-- {{ event.proxy }} -->Some quick example text to build on the
+              card title and make up the bulk of the card's content.
             </p>
-            <h3 class="text-sm text-gray-500">
-              <a href="#">
-                <span class="absolute inset-0" />
-                {{ event.proxy }}
-              </a>
-            </h3>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <style scoped>

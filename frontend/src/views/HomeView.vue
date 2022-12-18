@@ -1,10 +1,8 @@
-<script setup>
-import AccountDetails from "@/components/AccountDetails.vue";
-</script>
+<script setup></script>
 
 <template>
   <main>
-    <AccountDetails />
+    <h2 class="text-2xl font-bold text-gray-900">Landing page</h2>
   </main>
 </template>
 

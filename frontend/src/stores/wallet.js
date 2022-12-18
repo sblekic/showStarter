@@ -81,6 +81,7 @@ export const useWalletStore = defineStore(
               params: [
                 {
                   chainId: `${APP_CHAIN_ID}`,
+                  // !!!!! na switch to alchemy morati cu promijeniti !!!!!
                   chainName: "Localhost 8545",
                   rpcUrls: ["http://localhost:8545"],
                 },
